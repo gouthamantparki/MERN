@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://kit.fontawesome.com/ddd191ac37.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+        crossorigin="anonymous">
+    <title>Armani</title>
+    <link rel="shortcut icon" type="image/png" href="./images/favicon.png">
+    <script src="./scripts/index.js" crossorigin="anonymous"></script>
+</head>
+
+<body class="flex flex-col min-h-screen" onload="loadProductImages()">
+    <div class="bg-black py-2 flex flex-col justify-items-center items-center">
+        <img src="https://w7.pngwing.com/pngs/837/451/png-transparent-emporio-armani-hd-logo.png" class="h-28" />
+        <ul class="w-full flex gap-8 py-2 text-white uppercase justify-center items-center">
+            <li>New Arrivals</li>
+            <li>Women</li>
+            <li>Men</li>
+            <li>Kids</li>
+            <li>Gifts</li>
+            <li>Watches</li>
+            <div class="flex absolute right-10 gap-8 py-2">
+                <li class="flex" onclick="showCartList()">Cart</li>
+                <ul class="absolute right-1 top-14 inline-block bg-gray-300 px-4 py-4 rounded z-0" id="CartItems">
+                </ul>
+            </div>
+        </ul>
+    </div>
+    <div class="my-8 mx-8">
+        <h3 class="text-3xl uppercase text-center">Watches</h3>
+        <div class="grid grid-cols-3 gap-8 my-8 mx-8" id="Watches">
+        </div>
+    </div>
+</body>
+<footer class="mt-auto">
+    <div class="text-center bg-slate-300">@Copyrights reserved by Armani</div>
+</footer>
+
+</html>

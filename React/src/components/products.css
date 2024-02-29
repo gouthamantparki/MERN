@@ -1,0 +1,12 @@
+.product-listing {
+    text-align: center;
+}
+
+.product {
+    padding: 4rem 4rem;
+    display: flex;
+}
+
+.product-details {
+    margin: 0rem 5rem;
+}
