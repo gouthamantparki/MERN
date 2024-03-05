@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Express JSON</title>
+</head>
+
+<body>
+    <h1>Express - JSON</h1>
+    <div id="products"></div>
+
+    <script>
+        async function getProducts() {
+            try {
+                const result = await fetch('http://localhost:5000/api/v1/products');
+                const products = await result.json();
+                const data = products.data
+                const element = data.map((product) => {
+                    return (
+                        `
+                        <div>
+                            <h2>${product.title}</h2>
+                            <p>${product.description}</p>
+                            <button onClick=getProduct(${product.id})>Click</button>
+                            <a href='http://localhost:5000/api/v1/product/${product.id}'><button>Fetch Product</button></a>
+                            <hr />
+                        </div>
+                        `
+                    )
+                })
+                document.getElementById('products').innerHTML = element.join(" ");
+            }
+            catch (error) {
+                console.log(error)
+            }
+        }
+        getProducts();
+
+        async function getProduct(id) {
+            const result = await fetch(`http://localhost:5000/api/v1/product/${id}`);
+            const products = await result.json();
+            const data = products.data
+            console.log(data)
+        }
+    </script>
+</body>
+
+</html>
