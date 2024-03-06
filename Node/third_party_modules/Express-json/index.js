@@ -6,6 +6,13 @@ const app = express();
 
 app.use(express.static("./client"));
 
+const auth = (req, res, next) => {
+    console.log("middleware")
+    next();
+}
+
+app.use(auth);
+
 app.get('/', (req, res) => {
     res.status(200).json({success: true, message: 'JSON response'})
 });
@@ -30,6 +37,23 @@ app.get('/api/v1/product/:id', (req, res) => {
         res.status(404).json({success: false, message: "Product not found"})
     };
 });
+
+app.get('/api/v1/products/query', (req, res) => {
+    const { search, limit } = req.query;
+
+    const filteredProducts = products.filter((product) => {
+        return product.title.toLowerCase().startsWith(search)
+    });
+    console.log(filteredProducts)
+
+    if(filteredProducts.length >= 1) {
+        let limitedProducts = filteredProducts.slice(0, limit);
+        res.status(200).json({ success: true, data: limitedProducts })
+    } else {
+        res.status(200).json({ success: true, data: filteredProducts });
+    }
+})
+
 
 app.listen(5000, () => {
     console.log('Server is running in http://localhost:5000/')
