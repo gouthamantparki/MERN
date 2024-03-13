@@ -1,7 +1,9 @@
 import express from 'express'
 import mongoose from 'mongoose';
 import userRoutes from './routes/userRoutes.js'
+import postRoutes from './routes/postRoutes.js'
 import dotenv from 'dotenv'
+import cors from 'cors'
 
 dotenv.config();
 
@@ -11,9 +13,13 @@ const PORT = process.env.PORT;
 
 const CONNECTION_URL = process.env.CONNECTION_URL
 
+app.use(cors())
+
 app.use(express.json());
 
 app.use('/api/v1/users', userRoutes);
+
+app.use('/api/v1/posts', postRoutes);
 
 app.get('/', (req, res) => res.status(200).json({success:true, message: 'welcome'}));
 

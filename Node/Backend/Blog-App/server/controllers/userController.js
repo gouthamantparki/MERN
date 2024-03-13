@@ -1,20 +1,24 @@
-import users from '../data.js'
-import { v4 as uuidv4 } from 'uuid'
 import bcrypt from 'bcrypt'
 import User from '../models/userModel.js'
+import jwt from 'jsonwebtoken'
+import dotenv from 'dotenv'
+
+dotenv.config();
+const SECRET = process.env.SECRET;
 
 export const getAllUsers = async (req, res) => {
     try {
-        res.status(200).json({success: true, data: users})
+        const userList = await User.find();
+        res.status(200).json({success: true, data: userList})
     } catch (error) {
         res.status(404).json({success: false, message:error})
     }
-}
+};
 
 export const getUserById = async (req, res) => {
     try {
         const {id} = req.params;
-        let user = users.find((user) => user.id === +id)
+        let user = await User.findById(id)
         if(user) {
             res.status(200).json({success: true, data: user})
         } else {
@@ -36,40 +40,53 @@ export const signup = async (req, res) => {
             password: encryptedPassword,
         }
         const user = await User.create(signupObj);
-        res.status(201).json({success: true, data: user});
+        res.status(201).json({success: true, data: user, message: 'User created successfully'});
     } catch (error) {
         res.status(404).json({success: false, message:error})
     }
-}
+};
 
-
-export const createUser = async (req, res) => {
+export const signin = async (req, res) => {
     try {
-        const data = {...req.body, id: uuidv4()}
-        res.status(200).json({success: true, message: 'User saved successfully', data: data})
+        const {email, password} = req.body;
+        const user = await User.findOne({email: email})
+        if(!user) {
+            res.status(404).json({success: false, message:`User not found with email: ${email}`});
+            return;
+        }
+        const isUserValid = await bcrypt.compare(password, user.password);
+        if(isUserValid) {
+            const token = jwt.sign({email: user.email, id: user._id}, SECRET)
+            res.status(200).json({success: true, message: 'User Logged In', token: token});
+        } else {
+            res.status(404).json({success: false, message:'Invalid Credentials'});
+        }
     } catch (error) {
-        res.status(404).json({success: false, message: 'User failed to save', data: data})
+        res.status(404).json({success: false, message:error})
     }
 };
 
 export const updateUser = async (req, res) => {
     try {
         const { id } = req.params;
-        const data = req.body;
-        const updatedUser = users.map((user) => user.id === +id ? {...user, ...data} : user)
-        console.log(updatedUser)
+        const encryptedPassword = await bcrypt.hash(req.body.password, 12);
+        const updatedUser = await User.findByIdAndUpdate(id, {...req.body, password: encryptedPassword}, {new: true})
         res.status(200).json({success: true, message: 'User saved successfully', data: updatedUser})
     } catch (error) {
-        res.status(404).json({success: false, message: 'User failed to save'})
+        res.status(404).json({success: false, message: error.message})
     }
 };
 
 export const deleteUser = async (req, res) => {
     try {
         const { id } = req.params;
-        const updatedUserList = users.filter((user) => user.id !== +id)
-        res.status(200).json({success: true, message: 'User deleted successfully', data: updatedUserList})
+        const deleteUser = await User.findByIdAndDelete(id)
+        if(deleteUser) {
+            res.status(200).json({success: true, message: 'User deleted successfully'});
+        } else {
+            res.status(404).json({success: false, message: 'User failed to delete'});
+        }
     } catch (error) {
-        res.status(404).json({success: false, message: 'User failed to delete'})
+        res.status(404).json({success: false, message: 'User failed to delete'});
     }
 };
