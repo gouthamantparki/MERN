@@ -2,6 +2,7 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
 import axios from 'axios';
+import baseURL from '../api/api';
 
 export const Signup = () => {
 
@@ -31,7 +32,7 @@ export const Signup = () => {
         }
 
         if (password === confirmPassword) {
-            axios.post('http://localhost:5000/api/v1/users/signup', user)
+            axios.post(`${baseURL}/users/signup`, user)
                 .then(res => alert(res.data.message))
                 .catch(error => console.log(error));
         } else {

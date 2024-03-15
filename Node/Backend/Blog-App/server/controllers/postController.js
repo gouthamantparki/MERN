@@ -39,7 +39,7 @@ export const updatePostById = async (req, res) => {
         const { title, description, image, tags } = req.body;
         const post = await Post.findByIdAndUpdate(id, { $set: { title: title, description: description, image: image, tags: tags } }, { new: true })
         // const post = await Post.findByIdAndUpdate(id, { ...req.body }, { new: true })
-        res.status(200).json({success: true, data: post});
+        res.status(200).json({success: true, message: 'Post updated', data: post});
     } catch (error) {
         res.status(404).json({success: false, message: error})
     }

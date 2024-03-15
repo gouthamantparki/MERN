@@ -2,9 +2,11 @@ import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import baseURL from '../api/api';
 
 export const Signin = () => {
-
+    const navigate = useNavigate();
     const [user, setUser] = useState({
         email: '',
         password: ''
@@ -28,10 +30,12 @@ export const Signin = () => {
             return;
         }
 
-        axios.post('http://localhost:5000/api/v1/users/signin', user)
+        axios.post(`${baseURL}/users/signin`, user)
             .then(res => {
                 localStorage.setItem('token', res.data.token);
                 alert(res.data.message)
+                navigate('/', { replace: true })
+                window.location.reload()
             })
             .catch(error => alert(error.response.data.message));
     }

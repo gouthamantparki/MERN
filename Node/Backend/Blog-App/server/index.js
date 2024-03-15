@@ -4,6 +4,7 @@ import userRoutes from './routes/userRoutes.js'
 import postRoutes from './routes/postRoutes.js'
 import dotenv from 'dotenv'
 import cors from 'cors'
+import auth from './auth.js'
 
 dotenv.config();
 
@@ -15,7 +16,9 @@ const CONNECTION_URL = process.env.CONNECTION_URL
 
 app.use(cors())
 
-app.use(express.json());
+// app.use(auth())
+
+app.use(express.json({limit: '5mb'}));
 
 app.use('/api/v1/users', userRoutes);
 
